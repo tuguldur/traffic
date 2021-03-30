@@ -20,7 +20,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // data
 import axios from "axios";
 // pages
-import { Topic } from "./pages";
+import { Category, Topic } from "./pages";
 const App = () => {
   const theme = createMuiTheme({
     palette: {
@@ -98,7 +98,7 @@ const App = () => {
                     })}
                   </List>
                 ) : (
-                  <div className="category-loading">
+                  <div className="skeleton-loading">
                     <Typography component="div" variant="h3">
                       <Skeleton />
                     </Typography>
@@ -110,7 +110,13 @@ const App = () => {
               </Dialog>
             </div>
           </Route>
-          <Route to="/category/:id" exact component={Topic} />
+          <Route path="/category/:id" exact component={Category} />
+          <Route path="/topic/:id" exact component={Topic} />
+          <Route
+            path="**"
+            exact
+            component={() => <div>Хуудас олдсонгүй</div>}
+          />
         </Switch>
       </Router>
     </ThemeProvider>

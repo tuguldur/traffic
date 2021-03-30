@@ -1,2 +1,4 @@
+import Category from "./topic/category";
 import Topic from "./topic";
-export { Topic };
+
+export { Category, Topic };

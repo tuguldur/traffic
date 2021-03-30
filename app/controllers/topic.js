@@ -1,12 +1,28 @@
 const Topic = require("../models/topic");
 const Test = require("../models/test");
+const Answer = require("../models/answer");
+const Correct = require("../models/correct");
 const ObjectId = require("mongoose").Types.ObjectId;
-exports.index = async (req, res) => {
-  const { id: category } = req.params;
-  // aggregator
-  var agg = await Topic.aggregate([]).unwind("tests").exec();
-  console.log(agg);
-  if (ObjectId.isValid(category)) {
-    return res.json({ status: true, data: await Topic.find({ category }) });
+
+exports.test = async (req, res) => {
+  const { id: topic } = req.params;
+  // sorry
+  if (ObjectId.isValid(topic)) {
+    Test.find({ topic }).then((data) => {
+      let promises = data.map(async (mix) => {
+        const answers = await Answer.find({ test: mix._id }).select("answer");
+        const correct = await Correct.findOne({ test: mix._id }).populate(
+          "answer"
+        );
+        return {
+          ...mix._doc,
+          answers,
+          correct,
+        };
+      });
+      Promise.all(promises).then((send) =>
+        res.json({ status: true, data: send })
+      );
+    });
   } else return res.json({ status: false });
 };
