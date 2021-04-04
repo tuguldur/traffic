@@ -8,28 +8,38 @@ import Pagination from "@material-ui/lab/Pagination";
 import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 
-import Divider from "@material-ui/core/Divider";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Test from "components/test";
 const Topic = ({ match }) => {
   const { id } = match.params;
   const [state, setState] = useState(null);
+  const [topic, setTopic] = useState(null);
   const [active, setActive] = useState(0);
   useEffect(() => {
     axios.get("/rest/topic/" + id).then((response) => {
-      if (response.data.status) setState(response.data.data);
+      if (response.data.status) {
+        setTopic(response.data.topic);
+        setState(response.data.data);
+      }
     });
   }, [id]);
   useEffect(() => {}, [active]);
   return (
-    <div className="topic hero flex-center">
+    <div className="topic flex-center">
       <Container maxWidth="sm">
         <Paper>
           <div className="paper-header">
-            <h3>Нэр томъёо ба тодорхойлолт</h3>
+            {topic ? (
+              <h3>{topic.name}</h3>
+            ) : (
+              <Typography component="div" variant="h3">
+                <Skeleton />
+              </Typography>
+            )}
+
             <div>
-              <Link to="/">
+              <Link to={topic ? `/category/${topic.category}` : "/"}>
                 <IconButton>
                   <Icon>close</Icon>
                 </IconButton>

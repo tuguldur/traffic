@@ -5,5 +5,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .MuiTypography-h3 {
+      width: 100%;
+    }
+    h3 {
+      margin: 0;
+    }
+  }
+  .MuiTypography-body1 {
+    font-size: 14px;
   }
 }

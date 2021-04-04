@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
@@ -6,10 +6,18 @@ import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Icon from "@material-ui/core/Icon";
 
 import "./style.scss";
 const Test = (props) => {
   const { type, code, question, description, image, answers, correct } = props;
+  const [saved, setSaved] = useState(false);
+  const [selected, setIndex] = useState(null);
+  useEffect(() => {
+    setSaved(false);
+    setIndex(null);
+  }, [question]);
   return (
     <Paper style={{ padding: 15, marginTop: 15 }} className="test">
       {image ? (
@@ -17,8 +25,19 @@ const Test = (props) => {
           <img
             className="test-image"
             src={require("assets/" + image).default}
-            title={question}
+            alt={`${code} ${question}`}
           />
+          <Divider />
+        </>
+      ) : null}
+      {saved && description ? (
+        <>
+          <Typography variant="body1" gutterBottom>
+            Tайлбар:
+          </Typography>
+          <Typography variant="caption" gutterBottom>
+            {description}
+          </Typography>
           <Divider />
         </>
       ) : null}
@@ -32,11 +51,26 @@ const Test = (props) => {
               <ListItem
                 button
                 key={answer._id}
+                selected={selected === index}
                 onClick={() => {
-                  console.log(correct.answer.answer);
+                  if (!saved) {
+                    setSaved(answer._id);
+                    setIndex(index);
+                  }
                 }}
               >
                 <ListItemText secondary={`${index + 1}. ${answer.answer}`} />
+                {saved ? (
+                  answer._id === correct.answer._id ? (
+                    <ListItemSecondaryAction>
+                      <Icon style={{ color: "#0dbf0d" }}>done</Icon>
+                    </ListItemSecondaryAction>
+                  ) : answer._id === saved ? (
+                    <ListItemSecondaryAction>
+                      <Icon style={{ color: "red" }}>block</Icon>
+                    </ListItemSecondaryAction>
+                  ) : null
+                ) : null}
               </ListItem>
             );
           })}

@@ -8,6 +8,7 @@ exports.test = async (req, res) => {
   const { id: topic } = req.params;
   // sorry
   if (ObjectId.isValid(topic)) {
+    const title = await Topic.findById(topic);
     Test.find({ topic }).then((data) => {
       let promises = data.map(async (mix) => {
         const answers = await Answer.find({ test: mix._id }).select("answer");
@@ -21,7 +22,7 @@ exports.test = async (req, res) => {
         };
       });
       Promise.all(promises).then((send) =>
-        res.json({ status: true, data: send })
+        res.json({ status: true, data: send, topic: title })
       );
     });
   } else return res.json({ status: false });

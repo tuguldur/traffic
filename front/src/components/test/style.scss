@@ -1,11 +1,20 @@
 .test {
   .test-image {
-    display: block;
-    max-height: 240px;
+    object-fit: cover;
     width: 100%;
-    margin: 0 auto;
+    display: block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 140px;
   }
   hr {
     margin: 16px 0;
+  }
+  .MuiListItem-root {
+    border-radius: 8px;
+  }
+  .MuiListItemSecondaryAction-root {
+    display: flex;
   }
 }
