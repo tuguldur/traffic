@@ -2,6 +2,7 @@ const fs = require("fs");
 const seeder = require("mongoose-seed");
 const mongoose = require("mongoose");
 require("dotenv").config();
+
 // model
 const Topic = require("../models/topic.js");
 const Test = require("../models/test.js");
@@ -9,16 +10,30 @@ const Answer = require("../models/answer.js");
 const Correct = require("../models/correct.js");
 const Category = require("../models/category.js");
 // data main
-const test = fs.readFileSync("./app/data/main/test.json");
-const topic = fs.readFileSync("./app/data/main/topic.json");
-const answer = fs.readFileSync("./app/data/main/answer.json");
-const correct = fs.readFileSync("./app/data/main/correct.json");
+const tests = JSON.parse(fs.readFileSync("./app/data/main/test.json", "utf-8"));
+const topics = JSON.parse(
+  fs.readFileSync("./app/data/main/topic.json", "utf-8")
+);
+const answers = JSON.parse(
+  fs.readFileSync("./app/data/main/answer.json", "utf-8")
+);
+const corrects = JSON.parse(
+  fs.readFileSync("./app/data/main/correct.json", "utf-8")
+);
 // data sub
-const sub_test = fs.readFileSync("./app/data/sub/cd_test.json");
-const sub_topic = fs.readFileSync("./app/data/sub/cd_topic.json");
-const sub_answer = fs.readFileSync("./app/data/sub/cd_answer.json");
-const sub_correct = fs.readFileSync("./app/data/sub/cd_correct.json");
-seeder.setLogOutput(false);
+const sub_tests = JSON.parse(
+  fs.readFileSync("./app/data/sub/cd_test.json", "utf-8")
+);
+const sub_topics = JSON.parse(
+  fs.readFileSync("./app/data/sub/cd_topic.json", "utf-8")
+);
+const sub_answers = JSON.parse(
+  fs.readFileSync("./app/data/sub/cd_answer.json", "utf-8")
+);
+const sub_corrects = JSON.parse(
+  fs.readFileSync("./app/data/sub/cd_correct.json", "utf-8")
+);
+// clear models before insert
 mongoose
   .connect(process.env.MONGO, {
     useNewUrlParser: true,
@@ -28,7 +43,120 @@ mongoose
   })
   .then(() => console.log("Database connected"))
   .catch((err) => console.log(err));
-// console.log(JSON.parse(topic));
+seeder.setLogOutput(false);
+const save_corrects = async () => {
+  let tests_find = await Test.find();
+  var saved_tests = tests_find.map((test, index) => ({
+    ...test._doc,
+    id: tests.concat(sub_tests)[index].id,
+  }));
+  let answers_find = await Answer.find();
+  var saved_answers = answers_find.map((answer, index) => ({
+    ...answer._doc,
+    id: answers.concat(sub_answers)[index].id,
+  }));
+  var document = corrects.concat(sub_corrects).map((correct) => ({
+    answer: saved_answers.find((mix) => mix.id == correct.answer_id)._id,
+    test: saved_tests.find((mix) => mix.id == correct.test_id)._id,
+  }));
+
+  try {
+    await Correct.insertMany(document);
+    console.log("✅ Correct Answers saved");
+    process.exit();
+  } catch (e) {
+    console.log(e);
+    process.exit();
+  }
+};
+const save_answers = async () => {
+  // seed answer
+  Test.find().then(async (data) => {
+    let save = data.map((test, index) => ({
+      ...test._doc,
+      id: tests.concat(sub_tests)[index].id,
+    }));
+    var document = answers.concat(sub_answers).map((answer) => {
+      if (save.find((match) => match.id == answer.test_id))
+        return {
+          test: save.find((match) => match.id == answer.test_id)._id,
+          answer: answer.answer,
+        };
+      else {
+        return {
+          answer: answer.answer,
+        };
+      }
+    });
+    try {
+      await Answer.insertMany(document);
+      console.log("✅ Answers saved");
+      save_corrects();
+    } catch (e) {
+      console.log(e);
+      process.exit();
+    }
+  });
+};
+const save_tests = async () => {
+  const topic = await Topic.find();
+  let document = topic.map((top, index) => ({
+    ...top._doc,
+    id: topics.concat(sub_topics)[index].id,
+  }));
+  var save = tests.concat(sub_tests).map((test) => ({
+    topic: document.find((m) => m.id == test.topics_id)._id,
+    code: test.code,
+    question: test.questions,
+    image: test.images,
+    description: test.desc,
+  }));
+  try {
+    await Test.insertMany(save);
+    console.log("✅ Tests saved");
+    save_answers();
+  } catch (e) {
+    console.log(e);
+    process.exit();
+  }
+};
+// insert functions
+const save_category = async () => {
+  try {
+    await Category.insertMany([
+      {
+        name: "B ангилал",
+      },
+      {
+        name: "C,D,E ангилал",
+      },
+    ]);
+    console.log("✅ Categories saved");
+  } catch (e) {
+    console.log(e);
+    process.exit();
+  }
+};
+const save_topics = async () => {
+  const main = await Category.findOne({ name: "B ангилал" });
+  const sub = await Category.findOne({ name: "C,D,E ангилал" });
+  var main_topic = topics.map((topic) => ({
+    name: topic.topics_name,
+    category: main._id,
+  }));
+  var sub_topic = sub_topics.map((topic) => ({
+    name: topic.topics_name,
+    category: sub._id,
+  }));
+  try {
+    await Topic.insertMany(main_topic.concat(sub_topic));
+    console.log("✅ Topics saved");
+    save_tests();
+  } catch (e) {
+    console.log(e);
+    process.exit();
+  }
+};
 
 seeder.connect(process.env.MONGO, () => {
   // Load Mongoose models
@@ -40,146 +168,9 @@ seeder.connect(process.env.MONGO, () => {
     "./app/models/correct.js",
   ]);
 
-  // Clear specified collections
-  seeder.clearModels(
-    ["category", "topic", "test", "answer", "correct"],
-    async () => {
-      // seed category
-      seeder.populateModels(
-        [
-          {
-            model: "category",
-            documents: [
-              {
-                name: "B ангилал",
-              },
-              {
-                name: "C,D,E ангилал",
-              },
-            ],
-          },
-        ],
-        () => {
-          console.log("✅ Category saved");
-        }
-      );
-      // seed topic
-      const catMain = await Category.findOne({ name: "B ангилал" });
-      const subMain = await Category.findOne({ name: "C,D,E ангилал" });
-      var mainTopic = JSON.parse(topic).map((t) => {
-        return { name: t.topics_name, category: catMain._id };
-      });
-      var subTopic = JSON.parse(sub_topic).map((t) => {
-        return { name: t.topics_name, category: subMain._id };
-      });
-      seeder.populateModels(
-        [
-          {
-            model: "topic",
-            documents: mainTopic.concat(subTopic),
-          },
-        ],
-        async () => {
-          console.log("✅ Topics saved");
-          // seed test
-          let topics = await Topic.find();
-          var mixedTopic = topics.map((top, index) => {
-            return {
-              ...top._doc,
-              id: JSON.parse(topic).concat(JSON.parse(sub_topic))[index].id,
-            };
-          });
-
-          seeder.populateModels(
-            [
-              {
-                model: "test",
-                documents: JSON.parse(test)
-                  .concat(JSON.parse(sub_test))
-                  .map((te) => {
-                    return {
-                      topic: mixedTopic.find((m) => m.id == te.topics_id)._id,
-                      code: te.code,
-                      question: te.questions,
-                      image: te.images,
-                      description: te.desc,
-                    };
-                  }),
-              },
-            ],
-            async () => {
-              console.log("✅ Tests saved");
-              // seed answer
-              let tests = await Test.find();
-              var mixedTests = tests.map((ans, index) => {
-                return {
-                  ...ans._doc,
-                  id: JSON.parse(test).concat(JSON.parse(sub_test))[index].id,
-                };
-              });
-
-              seeder.populateModels(
-                [
-                  {
-                    model: "answer",
-                    documents: JSON.parse(answer)
-                      .concat(JSON.parse(sub_answer))
-                      .map((ans) => {
-                        if (mixedTests.find((m) => m.id == ans.test_id))
-                          return {
-                            test: mixedTests.find((m) => m.id == ans.test_id)
-                              ._id,
-                            answer: ans.answer,
-                          };
-                        else {
-                          return {
-                            answer: ans.answer,
-                          };
-                        }
-                      }),
-                  },
-                ],
-                async () => {
-                  // seed correct anwsers
-                  console.log("✅ Answers saved");
-                  let answers = await Answer.find();
-                  var mixedAnswers = answers.map((ans, index) => {
-                    return {
-                      ...ans._doc,
-                      id: JSON.parse(answer).concat(JSON.parse(sub_answer))[
-                        index
-                      ].id,
-                    };
-                  });
-                  seeder.populateModels(
-                    [
-                      {
-                        model: "correct",
-                        documents: JSON.parse(correct)
-                          .concat(JSON.parse(sub_correct))
-                          .map((a) => {
-                            return {
-                              answer: mixedAnswers.find(
-                                (mix) => mix.id == a.answer_id
-                              )._id,
-                              test: mixedTests.find(
-                                (mix) => mix.id == a.test_id
-                              )._id,
-                            };
-                          }),
-                      },
-                    ],
-                    () => {
-                      console.log("✅ Correct Answers saved");
-                      seeder.disconnect();
-                    }
-                  );
-                }
-              );
-            }
-          );
-        }
-      );
-    }
-  );
+  seeder.clearModels(["category", "topic", "test", "answer", "correct"], () => {
+    console.log("✅ Collections are clear!");
+    save_category();
+    save_topics();
+  });
 });
