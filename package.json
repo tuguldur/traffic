@@ -7,7 +7,8 @@
     "server": "nodemon index.js",
     "front": "npm start --prefix front",
     "development": "concurrently \"yarn server\" \"yarn front\"",
-    "seed": "node app/data/seed.js"
+    "seed": "node app/data/seed.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front && npm run build --prefix front npm run seed"
   },
   "license": "MIT",
   "dependencies": {
