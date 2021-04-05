@@ -7,6 +7,8 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 
+import Snackbar from "@material-ui/core/Snackbar";
+
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,14 +19,37 @@ import "./style.scss";
 import axios from "axios";
 const Category = ({ match }) => {
   const { id } = match.params;
+  const online = window.navigator.onLine;
   const [state, setState] = useState(null);
+  const [error, setError] = useState(false);
   useEffect(() => {
-    axios.get("/rest/category/" + id).then((response) => {
-      if (response.data.status) setState(response.data.data);
-    });
-  }, [id]);
+    if (online)
+      axios.get("/rest/topic").then((response) => {
+        if (response.data.status) {
+          setState(response.data.data);
+          localStorage.setItem("topic", JSON.stringify(response.data.data));
+        }
+      });
+    else {
+      var localTopic = localStorage.getItem("topic");
+      if (localTopic) {
+        setState(JSON.parse(localStorage.getItem("topic")));
+      } else {
+        setError(true);
+      }
+    }
+  }, [id, online]);
   return (
     <div className="topic">
+      <Snackbar
+        open={error}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        onClose={() => console.log("ok hide")}
+        message="Интернэт холболтоо шалгана уу."
+      />
       <Container maxWidth="md">
         <Paper>
           <div className="paper-header">
@@ -40,15 +65,17 @@ const Category = ({ match }) => {
           <Divider />
           {state ? (
             <List>
-              {state.map((topic, index) => {
-                return (
-                  <Link to={`/topic/${topic._id}`} key={topic._id}>
-                    <ListItem button>
-                      <ListItemText primary={`${index + 1}. ${topic.name}`} />
-                    </ListItem>
-                  </Link>
-                );
-              })}
+              {state
+                .filter((topic) => topic.category === id)
+                .map((topic, index) => {
+                  return (
+                    <Link to={`/topic/${topic._id}`} key={topic._id}>
+                      <ListItem button>
+                        <ListItemText primary={`${index + 1}. ${topic.name}`} />
+                      </ListItem>
+                    </Link>
+                  );
+                })}
             </List>
           ) : (
             <div className="skeleton-loading">

@@ -13,7 +13,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-
+import Snackbar from "@material-ui/core/Snackbar";
 import Skeleton from "@material-ui/lab/Skeleton";
 // router
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -22,6 +22,7 @@ import axios from "axios";
 // pages
 import { Category, Topic } from "./pages";
 const App = () => {
+  const online = window.navigator.onLine;
   const theme = createMuiTheme({
     palette: {
       type: "dark",
@@ -29,8 +30,18 @@ const App = () => {
   });
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState(null);
+  const [error, setError] = useState(false);
   return (
     <ThemeProvider theme={theme}>
+      <Snackbar
+        open={error}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        onClose={() => console.log("ok hide")}
+        message="Интернэт холболтоо шалгана уу."
+      />
       <CssBaseline />
       <Router>
         <Switch>
@@ -40,11 +51,27 @@ const App = () => {
                 className="type-card"
                 onClick={() => {
                   setOpen(true);
-                  axios.get("/rest/category").then((response) => {
-                    if (response.data.status) {
-                      setCategory(response.data.data);
+                  if (online) {
+                    axios.get("/rest/category").then((response) => {
+                      if (response.data.status) {
+                        setCategory(response.data.data);
+                        localStorage.setItem(
+                          "category",
+                          JSON.stringify(response.data.data)
+                        );
+                        console.log(
+                          `Cached ${response.data.data.length} items`
+                        );
+                      }
+                    });
+                  } else {
+                    var localCategory = localStorage.getItem("category");
+                    if (localCategory) {
+                      setCategory(JSON.parse(localStorage.getItem("category")));
+                    } else {
+                      setError(true);
                     }
-                  });
+                  }
                 }}
               >
                 <CardActionArea>
@@ -84,7 +111,6 @@ const App = () => {
                 className="category-dialog"
               >
                 <DialogTitle>Ангилал сонгох</DialogTitle>
-
                 {category ? (
                   <List>
                     {category.map((cat) => {

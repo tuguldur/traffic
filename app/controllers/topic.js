@@ -4,6 +4,9 @@ const Answer = require("../models/answer");
 const Correct = require("../models/correct");
 const ObjectId = require("mongoose").Types.ObjectId;
 
+exports.index = async (req, res) => {
+  return res.json({ status: true, data: await Topic.find() });
+};
 exports.test = async (req, res) => {
   const { id: topic } = req.params;
   // sorry
