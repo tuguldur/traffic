@@ -20,12 +20,15 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // data
 import axios from "axios";
 // pages
-import { Category, Topic } from "./pages";
+import { Category, Topic, Search } from "./pages";
 const App = () => {
   const online = window.navigator.onLine;
   const theme = createMuiTheme({
     palette: {
       type: "dark",
+      primary: {
+        main: "#2196f3",
+      },
     },
   });
   const [open, setOpen] = useState(false);
@@ -51,27 +54,13 @@ const App = () => {
                 className="type-card"
                 onClick={() => {
                   setOpen(true);
-                  if (online) {
+                  if (online)
                     axios.get("/rest/category").then((response) => {
                       if (response.data.status) {
                         setCategory(response.data.data);
-                        localStorage.setItem(
-                          "category",
-                          JSON.stringify(response.data.data)
-                        );
-                        console.log(
-                          `Cached ${response.data.data.length} items`
-                        );
                       }
                     });
-                  } else {
-                    var localCategory = localStorage.getItem("category");
-                    if (localCategory) {
-                      setCategory(JSON.parse(localStorage.getItem("category")));
-                    } else {
-                      setError(true);
-                    }
-                  }
+                  else setError(true);
                 }}
               >
                 <CardActionArea>
@@ -138,6 +127,7 @@ const App = () => {
           </Route>
           <Route path="/category/:id" exact component={Category} />
           <Route path="/topic/:id" exact component={Topic} />
+          <Route path="/search/:id" exact component={Search} />
           <Route
             path="**"
             exact

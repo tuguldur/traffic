@@ -42,7 +42,7 @@ const Test = (props) => {
         </>
       ) : null}
       <Typography variant="subtitle1" gutterBottom>
-        {question}
+        {code} {question}
       </Typography>
       {!type ? (
         <List>

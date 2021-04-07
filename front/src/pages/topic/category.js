@@ -27,17 +27,9 @@ const Category = ({ match }) => {
       axios.get("/rest/topic").then((response) => {
         if (response.data.status) {
           setState(response.data.data);
-          localStorage.setItem("topic", JSON.stringify(response.data.data));
         }
       });
-    else {
-      var localTopic = localStorage.getItem("topic");
-      if (localTopic) {
-        setState(JSON.parse(localStorage.getItem("topic")));
-      } else {
-        setError(true);
-      }
-    }
+    else setError(true);
   }, [id, online]);
   return (
     <div className="topic">
@@ -55,6 +47,11 @@ const Category = ({ match }) => {
           <div className="paper-header">
             <h3>Сэдвийн тест</h3>
             <div>
+              <Link to={`/search/${id}`}>
+                <IconButton>
+                  <Icon>search</Icon>
+                </IconButton>
+              </Link>
               <Link to="/">
                 <IconButton aria-label="delete">
                   <Icon>close</Icon>

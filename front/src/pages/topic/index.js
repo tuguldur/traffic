@@ -37,7 +37,6 @@ const Topic = ({ match }) => {
                 <Skeleton />
               </Typography>
             )}
-
             <div>
               <Link to={topic ? `/category/${topic.category}` : "/"}>
                 <IconButton>
