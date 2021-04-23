@@ -8,7 +8,7 @@
     "front": "npm start --prefix front",
     "development": "concurrently \"yarn server\" \"yarn front\"",
     "seed": "node app/data/seed.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front && npm run build --prefix front && npm run seed"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix front && npm run build --prefix front"
   },
   "license": "MIT",
   "dependencies": {

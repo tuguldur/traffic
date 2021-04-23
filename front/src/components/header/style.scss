@@ -10,7 +10,6 @@
   right: 0;
   border-bottom: 1px solid #dadce0;
   background: #fff;
-
   display: flex;
   flex-direction: row;
   height: 64px;
@@ -39,6 +38,11 @@
     margin-right: 10px;
     height: 32px;
     border-radius: 50%;
+  }
+  .header-action {
+    span {
+      font-size: 14px;
+    }
   }
 }
 .dark {
