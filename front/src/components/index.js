@@ -1,2 +1,3 @@
 import Test from "./test";
-export { Test };
+import Header from "./header";
+export { Test, Header };

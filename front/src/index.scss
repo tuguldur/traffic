@@ -1,8 +1,12 @@
 @import "~material-icons-font/material-icons-font.css";
-html,
-body,
+body {
+  &.dark {
+    background-color: #202124 !important;
+    color: #e8eaed;
+  }
+}
 #root {
-  height: 100%;
+  height: calc(100vh - 64px);
 }
 .flex-center {
   display: flex;
@@ -34,4 +38,33 @@ a {
   padding-left: 16px;
   padding-right: 16px;
   padding-bottom: 16px;
+}
+.app {
+  height: 100%;
+  margin-top: 64px;
+}
+.not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+  span {
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  a {
+    letter-spacing: 0.25px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #8ab4f8;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.light {
+  .MuiTypography-colorTextSecondary {
+    color: rgba(0, 0, 0, 0.8);
+  }
 }

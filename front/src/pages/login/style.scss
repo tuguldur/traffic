@@ -1,0 +1,45 @@
+.login {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  .login-container {
+    max-width: 450px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 24px 24px 36px;
+    text-align: center;
+    border-radius: 8px;
+    @media (min-width: 450px) {
+      padding: 48px 40px 36px;
+      border: 1px solid #dadce0;
+    }
+  }
+  .login-action-container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    justify-content: center;
+    .MuiButton-outlinedPrimary {
+      border-radius: 20px;
+      margin: 8px 0;
+      width: 100%;
+      border-width: 2px;
+      color: rgba(0, 0, 0, 0.87);
+      .brand-logo {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+.dark {
+  .login {
+    .login-container {
+      border: 1px solid #545454;
+    }
+    .login-action-container {
+      .MuiButton-outlinedPrimary {
+        color: white;
+      }
+    }
+  }
+}
