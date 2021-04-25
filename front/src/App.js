@@ -16,15 +16,34 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Snackbar from "@material-ui/core/Snackbar";
 import Skeleton from "@material-ui/lab/Skeleton";
 // router
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 // data
 import axios from "axios";
 // pages
-import { Category, Topic, Search, Login } from "./pages";
+import { Category, Topic, Search, Login, Settings } from "./pages";
 // custom
 import { Header } from "components";
 import { User } from "global/user";
 import Cookie from "js-cookie";
+const Protected = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      Cookie.get("session") ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to="/login" />
+      )
+    }
+  />
+);
+
 const App = () => {
   const online = window.navigator.onLine;
   const [color, setColor] = useState(
@@ -61,7 +80,10 @@ const App = () => {
             setUser(response.data.user);
           }
         })
-        .catch(() => setError("Нэвтрэхэд алдаа гарлаа"));
+        .catch(() => {
+          setError("Нэвтрэхэд алдаа гарлаа");
+          Cookie.remove("session");
+        });
   }, [session]);
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
   return (
@@ -165,6 +187,7 @@ const App = () => {
               <Route path="/topic/:id" exact component={Topic} />
               <Route path="/search/:id" exact component={Search} />
               <Route path="/login" exact component={Login} />
+              <Protected path="/settings" exact component={Settings} />
               <Route
                 path="**"
                 exact
