@@ -46,7 +46,12 @@ const Header = () => {
                       className="header-action"
                       onClick={(e) => setAccount(e.currentTarget)}
                     >
-                      <img src={user.avatar} className="avatar" alt={""} />
+                      <img
+                        src={user.avatar}
+                        referrerPolicy="no-referrer"
+                        className="avatar"
+                        alt={""}
+                      />
                       {user.name}
                     </Button>
                     <Menu
@@ -58,6 +63,9 @@ const Header = () => {
                     >
                       <MenuItem>
                         <Link to="/profle">Mэдээлэл</Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link to="/exam/status">Шалгалтууд</Link>
                       </MenuItem>
                       <MenuItem>
                         <Link to="/settings">Tохиргоо</Link>

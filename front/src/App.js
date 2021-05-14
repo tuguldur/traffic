@@ -26,7 +26,15 @@ import {
 // data
 import axios from "axios";
 // pages
-import { Category, Topic, Search, Login, Settings } from "./pages";
+import {
+  Category,
+  Topic,
+  Search,
+  Login,
+  Settings,
+  NewExam,
+  ExamView,
+} from "./pages";
 // custom
 import { Header } from "components";
 import { User } from "global/user";
@@ -126,14 +134,14 @@ const App = () => {
                           Сэдвийн тест
                         </Typography>
                         <Typography variant="subtitle2">
-                          Mонгол улсын замын хөдөлгөөний дүрмийн 820 тестээс 27
+                          Mонгол улсын замын хөдөлгөөний дүрмийн 1000 тестээс 37
                           сэдвээр ангилсан дасгал хэсэг
                         </Typography>
                       </CardContent>
                     </CardActionArea>
                   </Card>
                   <Card className="type-card">
-                    <Link to="/exam">
+                    <Link to="/exam/new">
                       <CardActionArea>
                         <CardContent>
                           <Icon className="card-icon">
@@ -188,6 +196,8 @@ const App = () => {
               <Route path="/search/:id" exact component={Search} />
               <Route path="/login" exact component={Login} />
               <Protected path="/settings" exact component={Settings} />
+              <Protected path="/exam/new" exact component={NewExam} />
+              <Protected path="/exam/:id" exact component={ExamView} />
               <Route
                 path="**"
                 exact

@@ -16,4 +16,12 @@
   .MuiListItemSecondaryAction-root {
     display: flex;
   }
+  .exam-selection {
+    &.Mui-selected {
+      background-color: rgba(76, 175, 80, 0.6);
+      &:hover {
+        background-color: rgba(76, 175, 80, 0.7);
+      }
+    }
+  }
 }
