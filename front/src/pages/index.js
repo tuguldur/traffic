@@ -5,4 +5,14 @@ import Login from "./login";
 import Settings from "./settings";
 import NewExam from "./exam/new";
 import ExamView from "./exam/view";
-export { Category, Topic, Search, Login, Settings, NewExam, ExamView };
+import ExamHistory from "./exam/history";
+export {
+  Category,
+  Topic,
+  Search,
+  Login,
+  Settings,
+  NewExam,
+  ExamView,
+  ExamHistory,
+};

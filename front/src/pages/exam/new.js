@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, Prompt } from "react-router-dom";
+import Affix from "@uiw/react-affix";
 import axios from "axios";
 import "./style.scss";
 import moment from "moment";
@@ -60,28 +61,30 @@ const NewExam = () => {
     <>
       <div className="exam" id="exam">
         <Container maxWidth="sm">
-          <Paper>
-            {loading ? <LinearProgress /> : null}
-            <div className="paper-header">
-              <h3>
-                Шалгалтын тест{" "}
-                <Tooltip title="Үлдсэн хугацаа">
-                  <span style={{ color: seconds < 60 ? "red" : "" }}>
-                    {moment().startOf("day").seconds(seconds).format("mm:ss")}
-                  </span>
-                </Tooltip>
-              </h3>
-              <div>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => save()}
-                >
-                  Дуусгах
-                </Button>
+          <Affix offsetTop={10}>
+            <Paper>
+              {loading ? <LinearProgress /> : null}
+              <div className="paper-header">
+                <h3>
+                  Шалгалтын тест{" "}
+                  <Tooltip title="Үлдсэн хугацаа">
+                    <span style={{ color: seconds < 60 ? "red" : "" }}>
+                      {moment().startOf("day").seconds(seconds).format("mm:ss")}
+                    </span>
+                  </Tooltip>
+                </h3>
+                <div>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => save()}
+                  >
+                    Дуусгах
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Paper>
+            </Paper>
+          </Affix>
           {state
             ? state.map((test, index) => (
                 <Test

@@ -65,7 +65,7 @@ const save_corrects = async () => {
     console.log("✅ Correct Answers saved");
     process.exit();
   } catch (e) {
-    console.log(e);
+    console.log("Алдаа гарлаа дахин оролдоно уу");
     process.exit();
   }
 };
@@ -93,7 +93,7 @@ const save_answers = async () => {
       console.log("✅ Answers saved");
       save_corrects();
     } catch (e) {
-      console.log(e);
+      console.log("Алдаа гарлаа дахин оролдоно уу");
       process.exit();
     }
   });
@@ -116,7 +116,7 @@ const save_tests = async () => {
     console.log("✅ Tests saved");
     save_answers();
   } catch (e) {
-    console.log(e);
+    console.log("Алдаа гарлаа дахин оролдоно уу");
     process.exit();
   }
 };
@@ -133,27 +133,28 @@ const save_category = async () => {
     ]);
     console.log("✅ Categories saved");
   } catch (e) {
-    console.log(e);
+    console.log("Алдаа гарлаа дахин оролдоно уу");
     process.exit();
   }
 };
 const save_topics = async () => {
-  const main = await Category.findOne({ name: "B ангилал" });
-  const sub = await Category.findOne({ name: "C,D,E ангилал" });
-  var main_topic = topics.map((topic) => ({
-    name: topic.topics_name,
-    category: main._id,
-  }));
-  var sub_topic = sub_topics.map((topic) => ({
-    name: topic.topics_name,
-    category: sub._id,
-  }));
   try {
+    const main = await Category.findOne({ name: "B ангилал" });
+    const sub = await Category.findOne({ name: "C,D,E ангилал" });
+    var main_topic = topics.map((topic) => ({
+      name: topic.topics_name,
+      category: main._id,
+    }));
+    var sub_topic = sub_topics.map((topic) => ({
+      name: topic.topics_name,
+      category: sub._id,
+    }));
+
     await Topic.insertMany(main_topic.concat(sub_topic));
     console.log("✅ Topics saved");
     save_tests();
   } catch (e) {
-    console.log(e);
+    console.log("Алдаа гарлаа дахин оролдоно уу");
     process.exit();
   }
 };

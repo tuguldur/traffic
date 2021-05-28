@@ -65,7 +65,7 @@ const Header = () => {
                         <Link to="/profle">Mэдээлэл</Link>
                       </MenuItem>
                       <MenuItem>
-                        <Link to="/exam/status">Шалгалтууд</Link>
+                        <Link to="/exam/history">Шалгалтууд</Link>
                       </MenuItem>
                       <MenuItem>
                         <Link to="/settings">Tохиргоо</Link>

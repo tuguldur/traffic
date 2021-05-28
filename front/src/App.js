@@ -34,6 +34,7 @@ import {
   Settings,
   NewExam,
   ExamView,
+  ExamHistory,
 } from "./pages";
 // custom
 import { Header } from "components";
@@ -197,6 +198,7 @@ const App = () => {
               <Route path="/login" exact component={Login} />
               <Protected path="/settings" exact component={Settings} />
               <Protected path="/exam/new" exact component={NewExam} />
+              <Protected path="/exam/history" exact component={ExamHistory} />
               <Protected path="/exam/:id" exact component={ExamView} />
               <Route
                 path="**"

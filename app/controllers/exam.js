@@ -73,10 +73,10 @@ exports.check = (req, res) => {
           return correct;
         });
         Promise.all(result).then(() => {
-          return res.json({ status: true, point });
+          data.point = point;
+          data.status = "complete";
+          data.save(() => res.json({ status: true, point }));
         });
-        data.status = "complete";
-        data.save();
       } else res.json({ status: false, msg: "Хүчингүй шалгалт" });
     })
     .catch((err) => console.log(err));
@@ -86,19 +86,12 @@ exports.view = (req, res) => {
   Exam.findOne({ _id: id, user: req.user._id }).then((data) => {
     if (data) {
       var answered = data.answers;
-      var point = 0;
       var result = data.test.map(async (find, index) => {
         const test = await Test.findById(find);
         const answers = await Answer.find({ test: test._id }).select("answer");
         const correct = await Correct.findOne({ test: test._id }).populate(
           "answer"
         );
-        point =
-          answered[index] === null
-            ? point + 0
-            : correct.answer._id.toString() == answered[index].toString()
-            ? point + 1
-            : point + 0;
         return {
           ...test._doc,
           answers,
@@ -107,8 +100,12 @@ exports.view = (req, res) => {
         };
       });
       Promise.all(result).then((record) => {
-        return res.json({ status: true, data: record, point });
+        return res.json({ status: true, data: record, point: data.point });
       });
     } else return res.status(404).json({ status: false });
   });
+};
+exports.history = async (req, res) => {
+  const data = await Exam.find({ user: req.user.id });
+  return res.json({ status: true, data });
 };

@@ -1,5 +1,6 @@
 .exam,
-.view {
+.view,
+.history {
   padding: 16px 0;
   .paper-header {
     padding: 10px 16px;
@@ -11,5 +12,21 @@
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
     margin-bottom: -4px;
+  }
+  .w-affix {
+    z-index: 1;
+  }
+}
+.history {
+  .history-lists {
+    margin-top: 16px;
+    .date {
+      font-size: 15px;
+      flex-basis: 33.33%;
+      flex-shrink: 0;
+    }
+    .status {
+      font-size: 15px;
+    }
   }
 }
