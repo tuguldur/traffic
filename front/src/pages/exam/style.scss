@@ -22,11 +22,18 @@
     margin-top: 16px;
     .date {
       font-size: 15px;
-      flex-basis: 33.33%;
+      flex-basis: 50%;
       flex-shrink: 0;
     }
     .status {
       font-size: 15px;
+    }
+  }
+  .point-chip-container {
+    display: flex;
+    flex-wrap: wrap;
+    .MuiChip-root {
+      margin: 2px;
     }
   }
 }

@@ -5,7 +5,6 @@ const examSchema = new mongoose.Schema({
   test: [{ type: mongoose.Schema.ObjectId, ref: "test", default: null }],
   answers: [{ type: mongoose.Schema.ObjectId, ref: "answer", default: null }],
   point: { type: Number, required: true, default: 0 },
-  status: { type: String, required: true, default: "created" },
   expires: { type: Date, required: true },
   created: { type: Date, default: Date.now },
 });

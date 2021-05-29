@@ -74,7 +74,6 @@ exports.check = (req, res) => {
         });
         Promise.all(result).then(() => {
           data.point = point;
-          data.status = "complete";
           data.save(() => res.json({ status: true, point }));
         });
       } else res.json({ status: false, msg: "Хүчингүй шалгалт" });
@@ -105,7 +104,38 @@ exports.view = (req, res) => {
     } else return res.status(404).json({ status: false });
   });
 };
-exports.history = async (req, res) => {
-  const data = await Exam.find({ user: req.user.id });
-  return res.json({ status: true, data });
+exports.history = (req, res) => {
+  Exam.find({ user: req.user.id })
+    .sort({ created: -1 })
+    .then((data) => {
+      var result = data.map(async (per) => {
+        var answered = per.answers;
+        let points = Promise.all(
+          per.test.map(async (find, index) => {
+            const test = await Test.findById(find);
+            const correct = await Correct.findOne({ test: test._id }).populate(
+              "answer"
+            );
+            return {
+              code: test.code,
+              correct:
+                answered[index] === null
+                  ? false
+                  : correct.answer._id.toString() == answered[index]
+                  ? true
+                  : false,
+            };
+          })
+        );
+        return { points: await points, test: per };
+      });
+      Promise.all(result).then((record) => {
+        return res.json({ status: true, data: record });
+      });
+    });
+};
+exports.remove = (req, res) => {
+  const { id } = req.params;
+  Exam.find({ user: req.user.id, _id: id }).deleteOne().exec();
+  return res.json({ status: true, id });
 };

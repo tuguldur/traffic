@@ -91,12 +91,7 @@ const Header = () => {
         </Container>
       </div>
 
-      <Dialog
-        open={logout}
-        onClose={() => setLogout(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+      <Dialog open={logout} onClose={() => setLogout(false)}>
         <DialogTitle>Та интернэт системээс гарах уу?</DialogTitle>
         <DialogContent>
           <DialogContentText>
