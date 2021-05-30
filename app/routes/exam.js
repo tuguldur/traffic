@@ -10,4 +10,5 @@ router.get("/new", check, exam.new);
 router.get("/history", check, exam.history);
 router.post("/check/:id", check, exam.check);
 router.get("/view/:id", check, exam.view);
+router.get("/log", check, exam.log);
 module.exports = router;

@@ -1,0 +1,24 @@
+.profile {
+  padding: 16px 0;
+  .profile-wrapper {
+    margin: 16px 0;
+    .avatar-wrapper {
+      display: flex;
+      flex-direction: row;
+      line-height: 40px;
+      justify-content: space-between;
+      .avatar-container {
+        display: flex;
+      }
+      span {
+        margin-left: 10px;
+        line-height: 40px;
+      }
+    }
+  }
+}
+.dark {
+  .react-calendar-heatmap .color-empty {
+    fill: #2d333b;
+  }
+}

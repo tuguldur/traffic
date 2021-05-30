@@ -139,3 +139,16 @@ exports.remove = (req, res) => {
   Exam.find({ user: req.user.id, _id: id }).deleteOne().exec();
   return res.json({ status: true, id });
 };
+exports.log = (req, res) => {
+  Exam.find({
+    user: req.user.id,
+    created: {
+      $gt: new Date(new Date().getFullYear(), 0, 1),
+      $lt: new Date(new Date().getFullYear(), 12, 0),
+    },
+  })
+    .select("created")
+    .then((data) => {
+      return res.json({ status: true, data });
+    });
+};

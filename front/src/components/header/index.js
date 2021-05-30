@@ -62,7 +62,7 @@ const Header = () => {
                       onClick={() => setAccount(null)}
                     >
                       <MenuItem>
-                        <Link to="/profle">Mэдээлэл</Link>
+                        <Link to="/profile">Хувийн мэдээлэл</Link>
                       </MenuItem>
                       <MenuItem>
                         <Link to="/exam/history">Шалгалтууд</Link>

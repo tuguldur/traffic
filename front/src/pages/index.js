@@ -6,6 +6,7 @@ import Settings from "./settings";
 import NewExam from "./exam/new";
 import ExamView from "./exam/view";
 import ExamHistory from "./exam/history";
+import Profile from "./profile";
 export {
   Category,
   Topic,
@@ -15,4 +16,5 @@ export {
   NewExam,
   ExamView,
   ExamHistory,
+  Profile,
 };
