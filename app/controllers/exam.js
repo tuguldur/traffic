@@ -32,7 +32,9 @@ exports.new = async (req, res) => {
       }
       const answers = await data.map(async (test) => ({
         ...test,
-        answers: await Answer.find({ test: test._id }).select("answer"),
+        answers: await Answer.find({ test: test._id })
+          .select("answer")
+          .then((data) => data.sort(() => Math.round(Math.random()) - 0.5)),
       }));
 
       Promise.all(answers).then(async (data) => {

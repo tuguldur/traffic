@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Container,
   Card,
@@ -11,6 +11,8 @@ import { User } from "global/user";
 import moment from "moment";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
+import axios from "axios";
+import { Link } from "react-router-dom";
 import "./style.scss";
 const Profile = () => {
   const { user } = useContext(User);
@@ -22,9 +24,10 @@ const Profile = () => {
       }
     });
   }, []);
+
   return (
     <div className="profile">
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
@@ -53,18 +56,43 @@ const Profile = () => {
               </div>
             )}
             <Divider />
-            <Typography variant="subtitle1" gutterBottom>
-              Энэ жилийн тестийн түүх
+
+            <Typography
+              variant="subtitle1"
+              gutterBottom
+              style={{ marginTop: 10 }}
+            >
+              Энэ жилийн тестийн түүх ({state?.length || 0})
             </Typography>
-            <CalendarHeatmap
-              startDate={moment().startOf("year").format("YYYY-MM-DD")}
-              endDate={moment().endOf("year").format("YYYY-MM-DD")}
-              values={[
-                { date: "2016-01-01" },
-                { date: "2016-01-22" },
-                { date: "2016-01-30" },
-              ]}
-            />
+            {state?.length > 0 && (
+              <CalendarHeatmap
+                startDate={moment().startOf("year").format("YYYY-MM-DD")}
+                endDate={moment().endOf("year").format("YYYY-MM-DD")}
+                horizontal={true}
+                showWeekdayLabels
+                weekdayLabels={["Да", "Мя", "Лх", "Пү", "Ба", "Бя", "Ня"]}
+                monthLabels={[
+                  "1 сар",
+                  "2 сар",
+                  "3 сар",
+                  "4 сар",
+                  "5 сар",
+                  "6 сар",
+                  "7 сар",
+                  "8 сар",
+                  "9 сар",
+                  "10 сар",
+                  "11 сар",
+                  "12 сар",
+                ]}
+                values={state.map((exam) => ({
+                  date: exam.created,
+                }))}
+              />
+            )}
+            <div className="link-history">
+              <Link to="/exam/history">Нийт түүх үзэх</Link>
+            </div>
           </CardContent>
         </Card>
       </Container>

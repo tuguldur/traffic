@@ -57,6 +57,7 @@ const NewExam = () => {
       }
     });
   }, []);
+
   return (
     <>
       <div className="exam" id="exam">
@@ -65,22 +66,47 @@ const NewExam = () => {
             <Paper>
               {loading ? <LinearProgress /> : null}
               <div className="paper-header">
-                <h3>
-                  Шалгалтын тест{" "}
-                  <Tooltip title="Үлдсэн хугацаа">
-                    <span style={{ color: seconds < 60 ? "red" : "" }}>
-                      {moment().startOf("day").seconds(seconds).format("mm:ss")}
+                <div className="exam-heading">
+                  <h3>
+                    Шалгалтын тест{" "}
+                    <Tooltip title="Үлдсэн хугацаа">
+                      <span style={{ color: seconds < 60 ? "red" : "" }}>
+                        {moment()
+                          .startOf("day")
+                          .seconds(seconds)
+                          .format("mm:ss")}
+                      </span>
+                    </Tooltip>
+                  </h3>
+                  {state ? (
+                    <span>
+                      Хариулт:{" "}
+                      {
+                        submissions.filter((submission) =>
+                          Boolean(submission.answer)
+                        ).length
+                      }
+                      /{state.length}
                     </span>
-                  </Tooltip>
-                </h3>
+                  ) : null}
+                </div>
                 <div>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => save()}
-                  >
-                    Дуусгах
-                  </Button>
+                  {state && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      disabled={
+                        submissions.filter((submission) =>
+                          Boolean(submission.answer)
+                        ).length === state.length
+                          ? false
+                          : true
+                      }
+                      onClick={() => save()}
+                    >
+                      Дуусгах
+                    </Button>
+                  )}
                 </div>
               </div>
             </Paper>

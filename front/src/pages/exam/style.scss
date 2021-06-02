@@ -7,6 +7,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .exam-heading {
+      h3 {
+        margin: 0;
+      }
+    }
   }
   .MuiLinearProgress-root {
     border-top-right-radius: 4px;
