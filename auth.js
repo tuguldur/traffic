@@ -21,6 +21,11 @@ const callback = (accessToken, refreshToken, profile, next) => {
       User.create({
         name: profile.displayName,
         [provider]: profile.id,
+        role:
+          provider === "google" &&
+          profile._json.email === process.env.ROOT_EMAIL
+            ? "admin"
+            : "user",
         avatar:
           provider === "facebook"
             ? `https://graph.facebook.com/${profile.id}/picture?type=normal`
