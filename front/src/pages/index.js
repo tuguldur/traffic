@@ -7,6 +7,7 @@ import NewExam from "./exam/new";
 import ExamView from "./exam/view";
 import ExamHistory from "./exam/history";
 import Profile from "./profile";
+import ExamList from "./admin/exam";
 export {
   Category,
   Topic,
@@ -17,4 +18,5 @@ export {
   ExamView,
   ExamHistory,
   Profile,
+  ExamList,
 };

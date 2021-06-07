@@ -4,6 +4,8 @@ const Category = require("../models/category");
 const Topic = require("../models/topic");
 const Answer = require("../models/answer");
 const Correct = require("../models/correct");
+const User = require("../models/user");
+const moment = require("moment");
 const mongoose = require("mongoose");
 exports.index = async (req, res) => {
   return res.json({
@@ -152,5 +154,23 @@ exports.log = (req, res) => {
     .select("created")
     .then((data) => {
       return res.json({ status: true, data });
+    });
+};
+exports.list = (req, res) => {
+  Exam.find()
+    .populate("user", "name phone")
+    .sort({ created: -1 })
+    .select("-test -answers")
+    .then((data) => {
+      return res.json({
+        status: true,
+        data: data.map((record) => ({
+          ...record._doc,
+          user: `${record.user?.name || "Идэвхгүй"} ${
+            record.user?.phone || ""
+          }`,
+          created: moment(record.created).format("YYYY-MM-DD HH:ss"),
+        })),
+      });
     });
 };

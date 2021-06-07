@@ -21,6 +21,17 @@ const Header = () => {
   const { user } = useContext(User);
   const [logout, setLogout] = useState(false);
   const [account, setAccount] = useState(false);
+  const links = [
+    { path: "/profile", label: "Хувийн мэдээлэл" },
+    { path: "/exam/history", label: "Шалгалтууд" },
+    { path: "/settings", label: "Tохиргоо" },
+  ];
+  const admins = [
+    { path: "/profile", label: "Хувийн мэдээлэл" },
+    { path: "/exam/history", label: "Шалгалтууд" },
+    { path: "/settings", label: "Tохиргоо" },
+    { path: "/admin/exams", label: "Шалгалтын мэдээлэл" },
+  ];
   return (
     <>
       <div id="header">
@@ -61,15 +72,17 @@ const Header = () => {
                       onClose={() => setAccount(null)}
                       onClick={() => setAccount(null)}
                     >
-                      <MenuItem>
-                        <Link to="/profile">Хувийн мэдээлэл</Link>
-                      </MenuItem>
-                      <MenuItem>
-                        <Link to="/exam/history">Шалгалтууд</Link>
-                      </MenuItem>
-                      <MenuItem>
-                        <Link to="/settings">Tохиргоо</Link>
-                      </MenuItem>
+                      {user.role === "admin"
+                        ? admins.map((link, index) => (
+                            <MenuItem key={index}>
+                              <Link to={link.path}>{link.label}</Link>
+                            </MenuItem>
+                          ))
+                        : links.map((link, index) => (
+                            <MenuItem key={index}>
+                              <Link to={link.path}>{link.label}</Link>
+                            </MenuItem>
+                          ))}
                       <MenuItem
                         onClick={() => setLogout(true)}
                         color="secondary"
